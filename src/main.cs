@@ -5,8 +5,8 @@ while(true)
     // Wait for user input
     var userInput = Console.ReadLine();
 
-    var parameters = userInput.Split(' ');
-    var command = parameters[0];
+    var parameters = userInput?.Split(' ') ?? Array.Empty<string>();
+    var command = parameters.FirstOrDefault("");
 
     if (command == "echo")
     {

@@ -12,9 +12,16 @@ while(true)
     {
         Console.WriteLine(string.Join(" ", parameters.Skip(1)));
     }
-    else if (command == "exit 0")
+    else if (command == "exit")
     {
-        return 0;
+        if (int.TryParse(parameters[1], out var exitCode))
+        {
+            return exitCode;
+        }
+        else
+        {
+            return 1;
+        }
     }
     else
     {

@@ -3,9 +3,16 @@ while(true)
     Console.Write("$ ");
 
     // Wait for user input
-    var command = Console.ReadLine();
+    var userInput = Console.ReadLine();
 
-    if (command == "exit 0")
+    var parameters = userInput.Split(' ');
+    var command = parameters[0];
+
+    if (command == "echo")
+    {
+        Console.WriteLine(string.Join(" ", parameters.Skip(1)));
+    }
+    else if (command == "exit 0")
     {
         return 0;
     }

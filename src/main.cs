@@ -1,7 +1,7 @@
-Console.Write("$ ");
-
 while(true)
 {
+    Console.Write("$ ");
+
     // Wait for user input
     var command = Console.ReadLine();
 

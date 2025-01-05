@@ -16,6 +16,8 @@ while(true)
     {
         return 0;
     }
-
-    Console.WriteLine($"{command}: command not found");
+    else
+    {
+        Console.WriteLine($"{command}: command not found");
+    }
 }

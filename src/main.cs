@@ -16,7 +16,7 @@ while(true)
     {
         foreach(var programName in parameters.Skip(1))
         {
-            if (programName == "type" || programName == "echo")
+            if (programName == "type" || programName == "echo" || programName == "exit")
             {
                 Console.WriteLine($"{programName} is a shell builtin");
             }

@@ -22,7 +22,7 @@ while(true)
             }
             else
             {
-                Console.WriteLine($"{command}: command not found");
+                Console.WriteLine($"{programName}: not found");
             }
         }
     }

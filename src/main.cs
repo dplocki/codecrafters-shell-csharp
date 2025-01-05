@@ -12,6 +12,20 @@ while(true)
     {
         Console.WriteLine(string.Join(" ", parameters.Skip(1)));
     }
+    else if (command == "type")
+    {
+        foreach(var programName in parameters.Skip(1))
+        {
+            if (programName == "type" || programName == "echo")
+            {
+                Console.WriteLine($"{programName}: is a shell builtin");
+            }
+            else
+            {
+                Console.WriteLine($"{command}: command not found");
+            }
+        }
+    }
     else if (command == "exit")
     {
         if (int.TryParse(parameters[1], out var exitCode))

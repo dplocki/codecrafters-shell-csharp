@@ -18,7 +18,7 @@ while(true)
         {
             if (programName == "type" || programName == "echo")
             {
-                Console.WriteLine($"{programName}: is a shell builtin");
+                Console.WriteLine($"{programName} is a shell builtin");
             }
             else
             {

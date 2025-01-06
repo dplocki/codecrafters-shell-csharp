@@ -1,9 +1,6 @@
 using System.Diagnostics;
 
-string[] pathToSources = (Environment.GetEnvironmentVariable("PATH") ?? string.Empty)
-    .Split([';', ':'], StringSplitOptions.RemoveEmptyEntries)
-    .Where(Directory.Exists)
-    .ToArray();
+var executableDirectories = new ExecutableDirectories(Environment.GetEnvironmentVariable("PATH") ?? "");
 
 while (true)
 {
@@ -29,7 +26,7 @@ while (true)
             }
             else
             {
-                var programPath = pathToSources.Select(path => Path.Combine(path, programName)).FirstOrDefault(File.Exists);
+                var programPath = executableDirectories.GetProgramPath(programName);
                 if (programPath != null)
                 {
                     Console.WriteLine($"{programName} is {programPath}");
@@ -56,7 +53,7 @@ while (true)
         }
     }
 
-    var executablePath = pathToSources.Select(path => Path.Combine(path, command)).FirstOrDefault(File.Exists);
+    var executablePath = executableDirectories.GetProgramPath(command);
     if (executablePath != null)
     {
         var processInfo = new ProcessStartInfo

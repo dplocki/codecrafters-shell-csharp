@@ -6,16 +6,18 @@ string[] pathToSources = (Environment.GetEnvironmentVariable("PATH") ?? string.E
 while(true)
 {
     Console.Write("$ ");
-    var userInput = Console.ReadLine();
 
+    var userInput = Console.ReadLine();
     var parameters = userInput?.Trim().Split(' ') ?? [];
     var command = parameters.FirstOrDefault("");
 
     if (command == "echo")
     {
         Console.WriteLine(string.Join(" ", parameters.Skip(1)));
+        continue;
     }
-    else if (command == "type")
+
+    if (command == "type")
     {
         foreach(var programName in parameters.Skip(1))
         {
@@ -38,8 +40,11 @@ while(true)
                 }
             }
         }
+
+        continue;
     }
-    else if (command == "exit")
+
+    if (command == "exit")
     {
         if (parameters.Length > 1 && int.TryParse(parameters[1], out var exitCode))
         {
@@ -50,8 +55,6 @@ while(true)
             return 0;
         }
     }
-    else
-    {
-        Console.WriteLine($"{command}: command not found");
-    }
+
+    Console.WriteLine($"{command}: command not found");
 }

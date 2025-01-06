@@ -1,4 +1,4 @@
-internal class TypeCommand(IDictionary<string, IBuiltinCommand> buildinCommandMap, ExecutableDirectories executableDirectories) : IBuiltinCommand
+internal class TypeCommand(IDictionary<string, IBuiltinCommand> builtinCommandMap, ExecutableDirectories executableDirectories) : IBuiltinCommand
 {
     private ExecutableDirectories executableDirectories = executableDirectories;
 
@@ -8,21 +8,20 @@ internal class TypeCommand(IDictionary<string, IBuiltinCommand> buildinCommandMa
     {
         foreach (var programName in args.Skip(1))
         {
-            if (programName == "type" || programName == "echo" || programName == "exit")
+            if (builtinCommandMap.ContainsKey(programName))
             {
                 Console.WriteLine($"{programName} is a shell builtin");
+                continue;
+            }
+
+            var programPath = executableDirectories.GetProgramPath(programName);
+            if (programPath != null)
+            {
+                Console.WriteLine($"{programName} is {programPath}");
             }
             else
             {
-                var programPath = executableDirectories.GetProgramPath(programName);
-                if (programPath != null)
-                {
-                    Console.WriteLine($"{programName} is {programPath}");
-                }
-                else
-                {
-                    Console.WriteLine($"{programName}: not found");
-                }
+                Console.WriteLine($"{programName}: not found");
             }
         }
 

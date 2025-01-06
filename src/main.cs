@@ -1,9 +1,11 @@
+using System.Diagnostics;
+
 string[] pathToSources = (Environment.GetEnvironmentVariable("PATH") ?? string.Empty)
     .Split([';', ':'], StringSplitOptions.RemoveEmptyEntries)
     .Where(Directory.Exists)
     .ToArray();
 
-while(true)
+while (true)
 {
     Console.Write("$ ");
 
@@ -19,7 +21,7 @@ while(true)
 
     if (command == "type")
     {
-        foreach(var programName in parameters.Skip(1))
+        foreach (var programName in parameters.Skip(1))
         {
             if (programName == "type" || programName == "echo" || programName == "exit")
             {
@@ -27,11 +29,9 @@ while(true)
             }
             else
             {
-                var path = pathToSources.FirstOrDefault(path => File.Exists(Path.Combine(path, programName)));
-                if (path != null)
+                var programPath = pathToSources.Select(path => Path.Combine(path, programName)).FirstOrDefault(File.Exists);
+                if (programPath != null)
                 {
-                    var programPath = Path.Combine(path, programName);
-
                     Console.WriteLine($"{programName} is {programPath}");
                 }
                 else
@@ -54,6 +54,45 @@ while(true)
         {
             return 0;
         }
+    }
+
+    var executablePath = pathToSources.Select(path => Path.Combine(path, command)).FirstOrDefault(File.Exists);
+    if (executablePath != null)
+    {
+        var processInfo = new ProcessStartInfo
+        {
+            FileName = executablePath,
+            Arguments = string.Join(" ", parameters.Skip(1)),
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
+
+        using var process = new Process();
+        process.StartInfo = processInfo;
+        process.OutputDataReceived += (sender, args) =>
+        {
+            if (args.Data != null)
+            {
+                Console.WriteLine(args.Data);
+            }
+        };
+
+        process.ErrorDataReceived += (sender, args) =>
+        {
+            if (args.Data != null)
+            {
+                Console.Error.WriteLine(args.Data);
+            }
+        };
+
+        process.Start();
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
+
+        await process.WaitForExitAsync();
+        continue;
     }
 
     Console.WriteLine($"{command}: command not found");

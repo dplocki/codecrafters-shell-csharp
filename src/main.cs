@@ -1,11 +1,14 @@
+string[] pathToSources = (Environment.GetEnvironmentVariable("PATH") ?? string.Empty)
+    .Split([';', ':'], StringSplitOptions.RemoveEmptyEntries)
+    .Where(Directory.Exists)
+    .ToArray();
+
 while(true)
 {
     Console.Write("$ ");
-
-    // Wait for user input
     var userInput = Console.ReadLine();
 
-    var parameters = userInput?.Split(' ') ?? Array.Empty<string>();
+    var parameters = userInput?.Trim().Split(' ') ?? [];
     var command = parameters.FirstOrDefault("");
 
     if (command == "echo")
@@ -22,19 +25,29 @@ while(true)
             }
             else
             {
-                Console.WriteLine($"{programName}: not found");
+                var path = pathToSources.FirstOrDefault(path => File.Exists(Path.Combine(path, programName)));
+                if (path != null)
+                {
+                    var programPath = Path.Combine(path, programName);
+
+                    Console.WriteLine($"{programName} is {programPath}");
+                }
+                else
+                {
+                    Console.WriteLine($"{programName}: not found");
+                }
             }
         }
     }
     else if (command == "exit")
     {
-        if (int.TryParse(parameters[1], out var exitCode))
+        if (parameters.Length > 1 && int.TryParse(parameters[1], out var exitCode))
         {
             return exitCode;
         }
         else
         {
-            return 1;
+            return 0;
         }
     }
     else

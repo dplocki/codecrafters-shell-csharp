@@ -1,6 +1,8 @@
 internal class ExitCommand : IBuiltinCommand
 {
-    public string Name => "exit";
+    public const string CommandName = "exit";
+
+    public string Name => CommandName;
 
     public int Execute(string[] args)
     {
@@ -8,9 +10,7 @@ internal class ExitCommand : IBuiltinCommand
         {
             return exitCode;
         }
-        else
-        {
-            return 0;
-        }
+
+        return 0;
     }
 }

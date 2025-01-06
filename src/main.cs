@@ -1,13 +1,19 @@
 using System.Diagnostics;
 
 var executableDirectories = new ExecutableDirectories(Environment.GetEnvironmentVariable("PATH") ?? "");
-var builtinCommandsMap = new Dictionary<string, IBuiltinCommand>
+var builtinCommandsMap = new Dictionary<string, IBuiltinCommand>();
+var builtinCommands = new List<IBuiltinCommand>()
 {
-    { "echo", new EchoCommand() },
-    { "exit", new ExitCommand() }
+    new EchoCommand(),
+    new ExitCommand(),
+    new TypeCommand(builtinCommandsMap, executableDirectories),
+    new PwdCommand(),
 };
 
-builtinCommandsMap.Add("type", new TypeCommand(builtinCommandsMap, executableDirectories));
+foreach (var item in builtinCommands)
+{
+    builtinCommandsMap[item.Name] = item;
+}
 
 while (true)
 {
@@ -17,7 +23,7 @@ while (true)
     var parameters = userInput?.Trim().Split(' ') ?? [];
     var command = parameters.FirstOrDefault("");
 
-    if (command == "exit")
+    if (command == ExitCommand.CommandName)
     {
         return builtinCommandsMap[command].Execute(parameters);
     }

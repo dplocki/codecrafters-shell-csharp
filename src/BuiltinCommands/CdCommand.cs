@@ -6,6 +6,12 @@ internal class CdCommand : IBuiltinCommand
     {
         var path = args[1];
 
+        if (path == "~")
+        {
+            Directory.SetCurrentDirectory(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile));
+            return 0;
+        }
+
         if (Directory.Exists(path))
         {
             Directory.SetCurrentDirectory(path);

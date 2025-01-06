@@ -1,6 +1,13 @@
 using System.Diagnostics;
 
 var executableDirectories = new ExecutableDirectories(Environment.GetEnvironmentVariable("PATH") ?? "");
+var builtinCommandsMap = new Dictionary<string, IBuiltinCommand>
+{
+    { "echo", new EchoCommand() },
+    { "exit", new ExitCommand() }
+};
+
+builtinCommandsMap.Add("type", new TypeCommand(builtinCommandsMap, executableDirectories));
 
 while (true)
 {
@@ -10,47 +17,15 @@ while (true)
     var parameters = userInput?.Trim().Split(' ') ?? [];
     var command = parameters.FirstOrDefault("");
 
-    if (command == "echo")
-    {
-        Console.WriteLine(string.Join(" ", parameters.Skip(1)));
-        continue;
-    }
-
-    if (command == "type")
-    {
-        foreach (var programName in parameters.Skip(1))
-        {
-            if (programName == "type" || programName == "echo" || programName == "exit")
-            {
-                Console.WriteLine($"{programName} is a shell builtin");
-            }
-            else
-            {
-                var programPath = executableDirectories.GetProgramPath(programName);
-                if (programPath != null)
-                {
-                    Console.WriteLine($"{programName} is {programPath}");
-                }
-                else
-                {
-                    Console.WriteLine($"{programName}: not found");
-                }
-            }
-        }
-
-        continue;
-    }
-
     if (command == "exit")
     {
-        if (parameters.Length > 1 && int.TryParse(parameters[1], out var exitCode))
-        {
-            return exitCode;
-        }
-        else
-        {
-            return 0;
-        }
+        return builtinCommandsMap[command].Execute(parameters);
+    }
+
+    if (builtinCommandsMap.TryGetValue(command, out var builtinCommand))
+    {
+        builtinCommand.Execute(parameters);
+        continue;
     }
 
     var executablePath = executableDirectories.GetProgramPath(command);

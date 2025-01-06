@@ -20,7 +20,7 @@ while (true)
     Console.Write("$ ");
 
     var userInput = Console.ReadLine();
-    var parameters = userInput?.Trim().Split(' ') ?? [];
+    var parameters = userInput?.Trim().Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries) ?? [];
     var command = parameters.FirstOrDefault("");
 
     if (command == ExitCommand.CommandName)

@@ -24,12 +24,6 @@ while (true)
 
     var userInput = Console.ReadLine() ?? string.Empty;
     var parameters = regex.Matches(userInput).Select(match => match.Groups["token"].Value).ToArray();
-
-    foreach(var parameter in parameters)
-    {
-        Console.WriteLine(parameter);
-    }
-
     var command = parameters.FirstOrDefault("");
     if (command == ExitCommand.CommandName)
     {

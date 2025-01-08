@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
-var regex = new Regex(@"(?<token>[^\s""']+)|""(?<token>[^""]*?)""|'(?<token>[^']*?)'", RegexOptions.Compiled);
+var regex = new Regex(@"(?<token>[^\s""']+)|'(?<token>[^']*)'", RegexOptions.Compiled);
 var executableDirectories = new ExecutableDirectories(Environment.GetEnvironmentVariable("PATH") ?? "");
 var builtinCommandsMap = new Dictionary<string, IBuiltinCommand>();
 var builtinCommands = new List<IBuiltinCommand>()
@@ -42,7 +42,7 @@ while (true)
         var processInfo = new ProcessStartInfo
         {
             FileName = executablePath,
-            Arguments = string.Join(" ", parameters.Skip(1)),
+            Arguments = string.Join(" ", parameters.Skip(1).Select(parameter => $"\"{parameter}\"")),
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,

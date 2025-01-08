@@ -41,7 +41,7 @@ while (true)
     {
         var processInfo = new ProcessStartInfo
         {
-            FileName = executablePath,
+            FileName = command,
             Arguments = string.Join(" ", parameters.Skip(1).Select(parameter => $"\"{parameter}\"")),
             RedirectStandardOutput = true,
             RedirectStandardError = true,

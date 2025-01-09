@@ -20,99 +20,90 @@ internal class CommandLineParser
             parserMode(commandLine[index]);
         }
 
-        EndParsing();
+        AddCurrentToken();
         return tokens;
     }
 
     private void StartParsing(char character)
     {
-        if (char.IsWhiteSpace(character))
-        {
-            parserMode = WhiteCharacterParameter;
-            return;
-        }
-
-        parserMode = NonWhiteCharacterParameter;
-        return;
+        parserMode = char.IsWhiteSpace(character)
+            ? BreakBetweenTokens
+            : SimpleToken;
     }
 
-    private void NonWhiteCharacterParameter(char character)
+    private void SimpleToken(char character)
     {
         if (char.IsWhiteSpace(character))
         {
-            parserMode = WhiteCharacterParameter;
+            parserMode = BreakBetweenTokens;
             return;
         }
 
         if (character == '\'')
         {
-            parserMode = SingleQuoteParameter;
-            index++;
-            return;
+            parserMode = SingleQuoteToken;
         }
-
-        if (character == '"')
+        else if (character == '"')
         {
-            parserMode = DoubleQuoteParameter;
-            index++;
-            return;
+            parserMode = DoubleQuoteToken;
+        }
+        else
+        {
+            currentToken.Add(character);
         }
 
         index++;
-        currentToken.Add(character);
-        return;
     }
 
-    private void SingleQuoteParameter(char character)
+    private void SingleQuoteToken(char character)
     {
         if (character == '\'')
         {
-            index++;
-            parserMode = NonWhiteCharacterParameter;
-            return;
+            parserMode = SimpleToken;
+        }
+        else
+        {
+            currentToken.Add(character);
         }
 
-        currentToken.Add(character);
         index++;
     }
 
-    private void DoubleQuoteParameter(char character)
+    private void DoubleQuoteToken(char character)
     {
         if (character == '"')
         {
+            parserMode = SimpleToken;
+        }
+        else
+        {
+            currentToken.Add(character);
+        }
+
+        index++;
+    }
+
+    private void BreakBetweenTokens(char character)
+    {
+        AddCurrentToken();
+
+        if (char.IsWhiteSpace(character))
+        {
             index++;
-            parserMode = NonWhiteCharacterParameter;
             return;
         }
 
-        currentToken.Add(character);
-        index++;
+        parserMode = SimpleToken;
     }
 
-    private void WhiteCharacterParameter(char character)
+    private void AddCurrentToken()
     {
-        if (currentToken.Count > 0)
+        if (currentToken.Count == 0)
         {
-            tokens.Add(new string([.. currentToken]));
-            currentToken = [];
-        }
-
-        if (!char.IsWhiteSpace(character))
-        {
-            parserMode = NonWhiteCharacterParameter;
             return;
         }
 
-        index++;
-        return;
-    }
-
-    private void EndParsing()
-    {
-        if (currentToken.Count > 0)
-        {
-            tokens.Add(new string([.. currentToken]));
-            currentToken = [];
-        }
+        tokens.Add(new string([.. currentToken]));
+        currentToken = [];
     }
 }

@@ -39,10 +39,8 @@ while (true)
     var executablePath = executableDirectories.GetProgramPath(command);
     if (executablePath != null)
     {
-        var processInfo = new ProcessStartInfo
+        var processInfo = new ProcessStartInfo(command, parameters.Skip(1))
         {
-            FileName = command,
-            Arguments = string.Join(" ", parameters.Skip(1).Select(parameter => $"\"{parameter}\"")),
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,

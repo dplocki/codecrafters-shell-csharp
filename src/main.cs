@@ -1,7 +1,6 @@
 using System.Diagnostics;
-using System.Text.RegularExpressions;
 
-var regex = new Regex(@"(?<token>[^\s""']+)|'(?<token>[^']*)'", RegexOptions.Compiled);
+var parser = new CommandLineParser();
 var executableDirectories = new ExecutableDirectories(Environment.GetEnvironmentVariable("PATH") ?? "");
 var builtinCommandsMap = new Dictionary<string, IBuiltinCommand>();
 var builtinCommands = new List<IBuiltinCommand>()
@@ -23,7 +22,7 @@ while (true)
     Console.Write("$ ");
 
     var userInput = Console.ReadLine() ?? string.Empty;
-    var parameters = regex.Matches(userInput.Replace("\'\'", string.Empty).Replace("\"\"", string.Empty)).Select(match => match.Groups["token"].Value).ToArray();
+    var parameters = parser.Parse(userInput).ToArray();
     var command = parameters.FirstOrDefault("");
     if (command == ExitCommand.CommandName)
     {

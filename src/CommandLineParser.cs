@@ -51,6 +51,12 @@ internal class CommandLineParser
             return;
         }
 
+        if (character == '"')
+        {
+            parserMode = DoubleQuoteParameter;
+            index++;
+            return;
+        }
 
         index++;
         currentToken.Add(character);
@@ -60,6 +66,19 @@ internal class CommandLineParser
     private void SingleQuoteParameter(char character)
     {
         if (character == '\'')
+        {
+            index++;
+            parserMode = NonWhiteCharacterParameter;
+            return;
+        }
+
+        currentToken.Add(character);
+        index++;
+    }
+
+    private void DoubleQuoteParameter(char character)
+    {
+        if (character == '"')
         {
             index++;
             parserMode = NonWhiteCharacterParameter;

@@ -66,6 +66,18 @@ internal class CommandLineParser
         parserMode = SimpleToken;
     }
 
+    private void DoubleQuotedBackslash(char character)
+    {
+        if (character != '\\' && character != '"' && character != '$' && character != '\n')
+        {
+            currentToken.Add('\\');
+        }
+
+        currentToken.Add(character);
+        index++;
+        parserMode = DoubleQuoteToken;
+    }
+
     private void SingleQuoteToken(char character)
     {
         if (character == '\'')
@@ -85,6 +97,10 @@ internal class CommandLineParser
         if (character == '"')
         {
             parserMode = SimpleToken;
+        }
+        else if (character == '\\')
+        {
+            parserMode = DoubleQuotedBackslash;
         }
         else
         {

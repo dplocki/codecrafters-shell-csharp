@@ -15,7 +15,7 @@
     [InlineData("1234 sdd\\ ssd 13243", new string[] { "1234", "sdd ssd", "13243" })]
     [InlineData("\"123456789\"", new string[] { "123456789" })]
     [InlineData("\"123456789", new string[] { "123456789" })]
-    public void Should_Split_Input_To_Tokens(string rawInput, string[] expectedTokens)
+    public void ShouldSplitInputToTokens(string rawInput, string[] expectedTokens)
     {
         // Arrange
         var parser = new CommandLineParser();

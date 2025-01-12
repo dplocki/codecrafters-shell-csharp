@@ -1,11 +1,12 @@
 internal class CommandLineParser
 {
+    public string? StdOut { get; private set; }
+
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
     private Action<char> parserMode;
     private IList<char> currentToken;
     private IList<string> tokens;
     private int index;
-
 #pragma warning restore CS8618
 
     public IEnumerable<string> Parse(string commandLine)
@@ -51,12 +52,71 @@ internal class CommandLineParser
         {
             parserMode = DoubleQuoteToken;
         }
+        else if (character == '>')
+        {
+            if (!currentToken.All(char.IsDigit))
+            {
+                AddCurrentToken();
+            }
+
+            parserMode = StreamRedirectionSignToken;
+            return;
+        }
         else
         {
             currentToken.Add(character);
         }
 
         index++;
+    }
+
+    private void StreamRedirectionSignToken(char character)
+    {
+        if (char.IsWhiteSpace(character))
+        {
+            currentToken.Add(character);
+            parserMode = StreamRedirectionBreakToken;
+        }
+        else if (character != '>')
+        {
+            parserMode = StreamRedirectionLocationToken;
+        }
+        else
+        {
+            currentToken.Add(character);
+            index++;
+        }
+    }
+
+    private void StreamRedirectionBreakToken(char character)
+    {
+        if (!char.IsWhiteSpace(character))
+        {
+            parserMode = StreamRedirectionLocationToken;
+        }
+        else
+        {
+            currentToken.Add(character);
+            index++;
+        }
+    }
+
+    private void StreamRedirectionLocationToken(char character)
+    {
+        if (char.IsWhiteSpace(character))
+        {
+            var redirectionStreamToken = new string([..currentToken]);
+            var tokens = redirectionStreamToken.Split('>');
+            var streamLocation = tokens[1].Trim();
+            StdOut = streamLocation;
+            currentToken = [];
+            parserMode = SimpleToken;
+        }
+        else
+        {
+            currentToken.Add(character);
+            index++;
+        }
     }
 
     private void NonQuotedBackslash(char character)

@@ -1,5 +1,7 @@
 using System.Diagnostics;
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("codecrafters-shell-tests")]
+
 var parser = new CommandLineParser();
 var executableDirectories = new ExecutableDirectories(Environment.GetEnvironmentVariable("PATH") ?? "");
 var builtinCommandsMap = new Dictionary<string, IBuiltinCommand>();

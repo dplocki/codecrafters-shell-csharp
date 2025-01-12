@@ -1,9 +1,10 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 25.0.1700.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "codecrafters-shell", "codecrafters-shell/codecrafters-shell.csproj", "{29097840-2370-4610-9275-010B39679800}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCraftersShell", "codecrafters-shell\codecrafters-shell.csproj", "{29097840-2370-4610-9275-010B39679800}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCraftersShell.Tests", "codecrafters-shell-tests\codecrafters-shell-tests.csproj", "{928816E6-B090-404E-90AC-3BED87714B47}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +16,10 @@ Global
 		{29097840-2370-4610-9275-010B39679800}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29097840-2370-4610-9275-010B39679800}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29097840-2370-4610-9275-010B39679800}.Release|Any CPU.Build.0 = Release|Any CPU
+		{928816E6-B090-404E-90AC-3BED87714B47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{928816E6-B090-404E-90AC-3BED87714B47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{928816E6-B090-404E-90AC-3BED87714B47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{928816E6-B090-404E-90AC-3BED87714B47}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

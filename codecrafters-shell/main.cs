@@ -26,6 +26,7 @@ while (true)
     var userInput = Console.ReadLine() ?? string.Empty;
     var parameters = parser.Parse(userInput).ToArray();
     var command = parameters.FirstOrDefault("");
+
     if (command == ExitCommand.CommandName)
     {
         return builtinCommandsMap[command].Execute(parameters);
@@ -40,6 +41,7 @@ while (true)
     var executablePath = executableDirectories.GetProgramPath(command);
     if (executablePath != null)
     {
+        var outputWriter = Console.Out;
         var processInfo = new ProcessStartInfo(command, parameters.Skip(1))
         {
             RedirectStandardOutput = true,
@@ -50,27 +52,43 @@ while (true)
 
         using var process = new Process();
         process.StartInfo = processInfo;
-        process.OutputDataReceived += (sender, args) =>
+
+        try
         {
-            if (args.Data != null)
+            process.OutputDataReceived += (sender, e) =>
             {
-                Console.WriteLine(args.Data);
-            }
-        };
+                if (e.Data == null)
+                {
+                    return;
+                }
 
-        process.ErrorDataReceived += (sender, args) =>
+                lock (outputWriter)
+                {
+                    outputWriter.WriteLine(e.Data);
+                }
+            };
+
+            process.ErrorDataReceived += (sender, e) =>
+            {
+                if (e.Data == null)
+                {
+                    return;
+                }
+
+                Console.Error.WriteLine(e.Data);
+            };
+
+            process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+
+            await process.WaitForExitAsync();
+        }
+        catch (Exception exception)
         {
-            if (args.Data != null)
-            {
-                Console.Error.WriteLine(args.Data);
-            }
-        };
+            Console.Error.WriteLine(exception.Message);
+        }
 
-        process.Start();
-        process.BeginOutputReadLine();
-        process.BeginErrorReadLine();
-
-        await process.WaitForExitAsync();
         continue;
     }
 

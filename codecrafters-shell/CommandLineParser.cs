@@ -1,5 +1,7 @@
 internal class CommandLineParser
 {
+    private const char UserInputEnd = '\0';
+
     public string? StdOut { get; private set; }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
@@ -21,7 +23,8 @@ internal class CommandLineParser
             parserMode(commandLine[index]);
         }
 
-        AddCurrentToken();
+        parserMode(UserInputEnd);
+
         return tokens;
     }
 
@@ -62,6 +65,11 @@ internal class CommandLineParser
             parserMode = StreamRedirectionSignToken;
             return;
         }
+        else if (character == UserInputEnd)
+        {
+            AddCurrentToken();
+            return;
+        }
         else
         {
             currentToken.Add(character);
@@ -81,6 +89,10 @@ internal class CommandLineParser
         {
             parserMode = StreamRedirectionLocationToken;
         }
+        else if (character == UserInputEnd)
+        {
+            throw new InvalidOperationException("Invalid input");
+        }
         else
         {
             currentToken.Add(character);
@@ -94,6 +106,10 @@ internal class CommandLineParser
         {
             parserMode = StreamRedirectionLocationToken;
         }
+        else if (character == UserInputEnd)
+        {
+            throw new InvalidOperationException("Invalid input");
+        }
         else
         {
             currentToken.Add(character);
@@ -103,7 +119,7 @@ internal class CommandLineParser
 
     private void StreamRedirectionLocationToken(char character)
     {
-        if (char.IsWhiteSpace(character))
+        if (char.IsWhiteSpace(character) || character == UserInputEnd)
         {
             var redirectionStreamToken = new string([..currentToken]);
             var tokens = redirectionStreamToken.Split('>');
@@ -121,6 +137,11 @@ internal class CommandLineParser
 
     private void NonQuotedBackslash(char character)
     {
+        if (character == UserInputEnd)
+        {
+            throw new InvalidOperationException("Invalid input");
+        }
+
         currentToken.Add(character);
         index++;
         parserMode = SimpleToken;
@@ -128,6 +149,11 @@ internal class CommandLineParser
 
     private void DoubleQuotedBackslash(char character)
     {
+        if (character == UserInputEnd)
+        {
+            throw new InvalidOperationException("Invalid input");
+        }
+
         if (character != '\\' && character != '"' && character != '$' && character != '\n')
         {
             currentToken.Add('\\');
@@ -143,6 +169,10 @@ internal class CommandLineParser
         if (character == '\'')
         {
             parserMode = SimpleToken;
+        }
+        else if (character == UserInputEnd)
+        {
+            throw new InvalidOperationException("Invalid input");
         }
         else
         {
@@ -162,6 +192,10 @@ internal class CommandLineParser
         {
             parserMode = DoubleQuotedBackslash;
         }
+        else if (character == UserInputEnd)
+        {
+            throw new InvalidOperationException("Invalid input");
+        }
         else
         {
             currentToken.Add(character);
@@ -177,6 +211,11 @@ internal class CommandLineParser
         if (char.IsWhiteSpace(character))
         {
             index++;
+            return;
+        }
+        else if (character == UserInputEnd)
+        {
+            AddCurrentToken();
             return;
         }
 

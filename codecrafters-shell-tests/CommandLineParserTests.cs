@@ -14,7 +14,6 @@
     [InlineData("world\\ \\ \\ \\ \\ \\ script", new string[] { "world      script" })]
     [InlineData("1234 sdd\\ ssd 13243", new string[] { "1234", "sdd ssd", "13243" })]
     [InlineData("\"123456789\"", new string[] { "123456789" })]
-    [InlineData("\"123456789", new string[] { "123456789" })]
     public void ShouldSplitInputToTokens(string rawInput, string[] expectedTokens)
     {
         // Arrange

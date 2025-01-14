@@ -2,10 +2,10 @@ internal class PwdCommand : ICommand
 {
     public string Name => "pwd";
 
-    public int Execute(TextWriter stdOut, string[] args)
+    public Task<int> Execute(TextWriter stdOut, string[] args)
     {
         stdOut.WriteLine(Directory.GetCurrentDirectory());
 
-        return 0;
+        return Task.FromResult(0);
     }
 }

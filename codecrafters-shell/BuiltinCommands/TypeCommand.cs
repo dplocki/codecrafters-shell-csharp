@@ -4,7 +4,7 @@ internal class TypeCommand(IDictionary<string, ICommand> builtinCommandMap, Exec
 
     public string Name => "type";
 
-    public int Execute(TextWriter stdOut, string[] args)
+    public Task<int> Execute(TextWriter stdOut, string[] args)
     {
         foreach (var programName in args.Skip(1))
         {
@@ -25,6 +25,6 @@ internal class TypeCommand(IDictionary<string, ICommand> builtinCommandMap, Exec
             }
         }
 
-        return 0;
+        return Task.FromResult(0);
     }
 }

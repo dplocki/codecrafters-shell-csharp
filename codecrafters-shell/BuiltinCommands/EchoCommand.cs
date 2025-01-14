@@ -1,10 +1,10 @@
-internal class EchoCommand : IBuiltinCommand
+internal class EchoCommand : ICommand
 {
     public string Name => "echo";
 
-    public int Execute(string[] args)
+    public int Execute(TextWriter stdOut, string[] args)
     {
-        Console.WriteLine(string.Join(" ", args.Skip(1)));
+        stdOut.WriteLine(string.Join(" ", args.Skip(1)));
 
         return 0;
     }

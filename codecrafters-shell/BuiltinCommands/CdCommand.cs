@@ -1,8 +1,8 @@
-internal class CdCommand : IBuiltinCommand
+internal class CdCommand : ICommand
 {
     public string Name => "cd";
 
-    public int Execute(string[] args)
+    public int Execute(TextWriter stdOut, string[] args)
     {
         var path = args[1];
 
@@ -18,7 +18,7 @@ internal class CdCommand : IBuiltinCommand
             return 0;
         }
 
-        Console.WriteLine($"{Name}: {path}: No such file or directory");
+        stdOut.WriteLine($"{Name}: {path}: No such file or directory");
         return 1;
     }
 }

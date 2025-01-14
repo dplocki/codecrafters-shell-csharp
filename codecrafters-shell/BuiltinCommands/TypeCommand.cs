@@ -1,27 +1,27 @@
-internal class TypeCommand(IDictionary<string, IBuiltinCommand> builtinCommandMap, ExecutableDirectories executableDirectories) : IBuiltinCommand
+internal class TypeCommand(IDictionary<string, ICommand> builtinCommandMap, ExecutableDirectories executableDirectories) : ICommand
 {
     private ExecutableDirectories executableDirectories = executableDirectories;
 
     public string Name => "type";
 
-    public int Execute(string[] args)
+    public int Execute(TextWriter stdOut, string[] args)
     {
         foreach (var programName in args.Skip(1))
         {
             if (builtinCommandMap.ContainsKey(programName))
             {
-                Console.WriteLine($"{programName} is a shell builtin");
+                stdOut.WriteLine($"{programName} is a shell builtin");
                 continue;
             }
 
             var programPath = executableDirectories.GetProgramPath(programName);
             if (programPath != null)
             {
-                Console.WriteLine($"{programName} is {programPath}");
+                stdOut.WriteLine($"{programName} is {programPath}");
             }
             else
             {
-                Console.WriteLine($"{programName}: not found");
+                stdOut.WriteLine($"{programName}: not found");
             }
         }
 

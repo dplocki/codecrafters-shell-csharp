@@ -1,10 +1,10 @@
-internal class PwdCommand : IBuiltinCommand
+internal class PwdCommand : ICommand
 {
     public string Name => "pwd";
 
-    public int Execute(string[] args)
+    public int Execute(TextWriter stdOut, string[] args)
     {
-        Console.WriteLine(Directory.GetCurrentDirectory());
+        stdOut.WriteLine(Directory.GetCurrentDirectory());
 
         return 0;
     }

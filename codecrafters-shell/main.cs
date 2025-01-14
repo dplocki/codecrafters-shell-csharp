@@ -27,11 +27,6 @@ while (true)
     var fileWriter = Console.Out;
 
     var command = parameters.FirstOrDefault("");
-    if (command == ExitCommand.CommandName)
-    {
-        return await builtinCommandsMap[command].Execute(fileWriter, parameters);
-    }
-
     if (builtinCommandsMap.TryGetValue(command, out var builtinCommand))
     {
         await builtinCommand.Execute(fileWriter, parameters);

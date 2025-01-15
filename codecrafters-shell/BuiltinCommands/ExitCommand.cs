@@ -4,12 +4,17 @@ internal class ExitCommand : ICommand
 
     public Task<int> Execute(TextWriter stdOut, string[] args)
     {
-        if (args.Length > 1 && int.TryParse(args[1], out var exitCode))
+        int exitCode = 0;
+
+        if (args.Length > 1)
         {
-            Environment.Exit(exitCode);
-            return Task.FromResult(exitCode);
+            if (!int.TryParse(args[1], out exitCode))
+            {
+                exitCode = 0;
+            }
         }
 
+        Environment.Exit(exitCode);
         return Task.FromResult(0);
     }
 }

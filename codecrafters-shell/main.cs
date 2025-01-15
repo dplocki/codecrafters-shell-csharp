@@ -24,21 +24,29 @@ while (true)
 
     var userInput = Console.ReadLine() ?? string.Empty;
     var parameters = parser.Parse(userInput).ToArray();
-    var fileWriter = Console.Out;
+
+    var stdOut = parser.StdOut == null
+        ? Console.Out
+        : new StreamWriter(parser.StdOut);
 
     var command = parameters.FirstOrDefault("");
     if (builtinCommandsMap.TryGetValue(command, out var builtinCommand))
     {
-        await builtinCommand.Execute(fileWriter, parameters);
-        continue;
+        await builtinCommand.Execute(stdOut, parameters);
     }
-
-    var executablePath = executableDirectories.GetProgramPath(command);
-    if (executablePath != null)
+    else
     {
-        await runExecutable.Execute(fileWriter, parameters);
-        continue;
+        var executablePath = executableDirectories.GetProgramPath(command);
+        if (executablePath != null)
+        {
+            await runExecutable.Execute(stdOut, parameters);
+        }
+        else
+        {
+            Console.Error.WriteLine($"{command}: command not found");
+        }
     }
 
-    Console.WriteLine($"{command}: command not found");
+    stdOut.Flush();
+    stdOut.Close();
 }

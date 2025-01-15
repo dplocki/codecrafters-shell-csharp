@@ -2,7 +2,7 @@ internal class EchoCommand : ICommand
 {
     public string Name => "echo";
 
-    public Task<int> Execute(TextWriter stdOut, string[] args)
+    public Task<int> Execute(TextWriter stdOut, TextWriter stdErr, string[] args)
     {
         stdOut.WriteLine(string.Join(" ", args.Skip(1)));
 

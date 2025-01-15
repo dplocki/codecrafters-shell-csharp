@@ -2,7 +2,7 @@ internal class CdCommand : ICommand
 {
     public string Name => "cd";
 
-    public Task<int> Execute(TextWriter stdOut, string[] args)
+    public Task<int> Execute(TextWriter stdOut, TextWriter stdErr, string[] args)
     {
         var path = args[1];
 
@@ -18,7 +18,7 @@ internal class CdCommand : ICommand
             return Task.FromResult(0);
         }
 
-        stdOut.WriteLine($"{Name}: {path}: No such file or directory");
+        stdErr.WriteLine($"{Name}: {path}: No such file or directory");
         return Task.FromResult(1);
     }
 }

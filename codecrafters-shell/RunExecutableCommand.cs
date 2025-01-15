@@ -1,12 +1,10 @@
 using System.Diagnostics;
 
-internal class RunExecutableCommand(ExecutableDirectories executableDirectories) : ICommand
+internal class RunExecutableCommand : ICommand
 {
-    private ExecutableDirectories executableDirectories = executableDirectories;
-
     public string Name => "RunExecutable";
 
-    async public Task<int> Execute(TextWriter stdOut, string[] args)
+    async public Task<int> Execute(TextWriter stdOut, TextWriter stdErr, string[] args)
     {
         var command = args[0];
         var processInfo = new ProcessStartInfo(command, args.Skip(1))
@@ -42,7 +40,7 @@ internal class RunExecutableCommand(ExecutableDirectories executableDirectories)
                     return;
                 }
 
-                Console.Error.WriteLine(e.Data);
+                stdErr.WriteLine(e.Data);
             };
 
             process.Start();
@@ -53,7 +51,7 @@ internal class RunExecutableCommand(ExecutableDirectories executableDirectories)
         }
         catch (Exception exception)
         {
-            Console.Error.WriteLine(exception.Message);
+            stdErr.WriteLine(exception.Message);
         }
 
         return process.ExitCode;

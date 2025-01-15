@@ -3,6 +3,7 @@ internal class CommandLineParser
     private const char UserInputEnd = '\0';
 
     public string? StdOut { get; private set; }
+    public string? StdErr { get; private set; }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
     private Action<char> parserMode;
@@ -13,6 +14,7 @@ internal class CommandLineParser
 
     public IEnumerable<string> Parse(string commandLine)
     {
+        StdErr = null;
         StdOut = null;
         currentToken = [];
         tokens = [];
@@ -125,7 +127,13 @@ internal class CommandLineParser
             var redirectionStreamToken = new string([..currentToken]);
             var tokens = redirectionStreamToken.Split('>');
             var streamLocation = tokens[1].Trim();
-            StdOut = streamLocation;
+
+            if (tokens[0] == "1") {
+                StdOut = streamLocation;
+            } else if (tokens[0] == "2") {
+                StdErr = streamLocation;
+            }
+
             currentToken = [];
             parserMode = SimpleToken;
         }

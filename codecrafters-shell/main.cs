@@ -3,7 +3,7 @@
 var parser = new CommandLineParser();
 var executableDirectories = new ExecutableDirectories(Environment.GetEnvironmentVariable("PATH") ?? "");
 var builtinCommandsMap = new Dictionary<string, ICommand>();
-var runExecutable = new RunExecutableCommand(executableDirectories);
+var runExecutable = new RunExecutableCommand();
 var builtinCommands = new List<ICommand>()
 {
     new EchoCommand(),
@@ -29,23 +29,31 @@ while (true)
         ? Console.Out
         : new StreamWriter(parser.StdOut);
 
+    var stdErr = parser.StdErr == null
+        ? Console.Error
+        : new StreamWriter(parser.StdErr);
+
     var command = parameters.FirstOrDefault("");
     if (builtinCommandsMap.TryGetValue(command, out var builtinCommand))
     {
-        await builtinCommand.Execute(stdOut, parameters);
+        await builtinCommand.Execute(stdOut, stdErr, parameters);
     }
     else
     {
         var executablePath = executableDirectories.GetProgramPath(command);
         if (executablePath != null)
         {
-            await runExecutable.Execute(stdOut, parameters);
+            await runExecutable.Execute(stdOut, stdErr, parameters);
         }
         else
         {
-            Console.Error.WriteLine($"{command}: command not found");
+            stdErr.WriteLine($"{command}: command not found");
         }
     }
+
+    stdErr.Flush();
+    stdErr.Close();
+    stdErr.Dispose();
 
     stdOut.Flush();
     stdOut.Close();

@@ -2,7 +2,7 @@ internal class ExitCommand : ICommand
 {
     public string Name => "exit";
 
-    public Task<int> Execute(TextWriter stdOut, string[] args)
+    public Task<int> Execute(TextWriter stdOut, TextWriter stdErr, string[] args)
     {
         int exitCode = 0;
 

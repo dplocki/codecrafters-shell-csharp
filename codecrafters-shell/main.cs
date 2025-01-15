@@ -49,4 +49,5 @@ while (true)
 
     stdOut.Flush();
     stdOut.Close();
+    stdOut.Dispose();
 }

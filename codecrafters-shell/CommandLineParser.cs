@@ -13,6 +13,7 @@ internal class CommandLineParser
 
     public IEnumerable<string> Parse(string commandLine)
     {
+        StdOut = null;
         currentToken = [];
         tokens = [];
         parserMode = StartParsing;

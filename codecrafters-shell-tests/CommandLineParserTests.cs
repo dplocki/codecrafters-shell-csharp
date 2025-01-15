@@ -45,4 +45,24 @@
         Assert.Equal(expectedTokens, result);
         Assert.Equal(expectedStdStream, parser.StdOut);
     }
+
+    [Theory]
+    [InlineData("2>abc bcd", new string[] { "bcd" }, "abc")]
+    [InlineData("2> abc bcd", new string[] { "bcd" }, "abc")]
+    [InlineData("cde 2>abc >bcd", new string[] { "cde" }, "abc")]
+    [InlineData("cde >abc 2>bcd", new string[] { "cde" }, "bcd")]
+    [InlineData("abc 2>bcd", new string[] { "abc" }, "bcd")]
+
+    public void ShouldRecognizeErrStreamRedirect(string rawInput, string[] expectedTokens, string expectedStdStream)
+    {
+        // Arrange
+        var parser = new CommandLineParser();
+
+        // Act
+        var result = parser.Parse(rawInput);
+
+        // Assert
+        Assert.Equal(expectedTokens, result);
+        Assert.Equal(expectedStdStream, parser.StdErr);
+    }
 }

@@ -126,12 +126,16 @@ internal class CommandLineParser
         {
             var redirectionStreamToken = new string([..currentToken]);
             var tokens = redirectionStreamToken.Split('>');
+            var streamType = tokens[0].Trim();
             var streamLocation = tokens[1].Trim();
 
-            if (tokens[0] == "1") {
-                StdOut = streamLocation;
-            } else if (tokens[0] == "2") {
+            if (streamType == "2")
+            {
                 StdErr = streamLocation;
+            }
+            else if (string.IsNullOrEmpty(streamType) || streamType == "1")
+            {
+                StdOut = streamLocation;
             }
 
             currentToken = [];

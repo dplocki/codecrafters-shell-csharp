@@ -27,11 +27,11 @@ while (true)
 
     var stdOut = parser.StdOut == null
         ? Console.Out
-        : new StreamWriter(parser.StdOut);
+        : new StreamWriter(parser.StdOut, parser.StdOutAppend);
 
     var stdErr = parser.StdErr == null
         ? Console.Error
-        : new StreamWriter(parser.StdErr);
+        : new StreamWriter(parser.StdErr, parser.StdErrAppend);
 
     var command = parameters.FirstOrDefault("");
     if (builtinCommandsMap.TryGetValue(command, out var builtinCommand))

@@ -3,7 +3,9 @@ internal class CommandLineParser
     private const char UserInputEnd = '\0';
 
     public string? StdOut { get; private set; }
+    public bool StdOutAppend { get; private set; }
     public string? StdErr { get; private set; }
+    public bool StdErrAppend { get; internal set; }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
     private Action<char> parserMode;
@@ -16,6 +18,8 @@ internal class CommandLineParser
     {
         StdErr = null;
         StdOut = null;
+        StdErrAppend = false;
+        StdOutAppend = false;
         currentToken = [];
         tokens = [];
         parserMode = StartParsing;
@@ -125,17 +129,19 @@ internal class CommandLineParser
         if (char.IsWhiteSpace(character) || character == UserInputEnd)
         {
             var redirectionStreamToken = new string([..currentToken]);
-            var tokens = redirectionStreamToken.Split('>');
-            var streamType = tokens[0].Trim();
-            var streamLocation = tokens[1].Trim();
+            var append = redirectionStreamToken.Contains(">>");
+            var streamType = redirectionStreamToken[..redirectionStreamToken.IndexOf('>')].Trim();
+            var streamLocation = redirectionStreamToken[(redirectionStreamToken.LastIndexOf('>') + 1)..].Trim();
 
             if (streamType == "2")
             {
                 StdErr = streamLocation;
+                StdErrAppend = append;
             }
             else if (string.IsNullOrEmpty(streamType) || streamType == "1")
             {
                 StdOut = streamLocation;
+                StdOutAppend = append;
             }
 
             currentToken = [];

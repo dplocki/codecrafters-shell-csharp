@@ -1,34 +1,16 @@
-[![progress-banner](https://backend.codecrafters.io/progress/shell/bf891b72-39e7-4ce4-895c-8eff29204469)](https://app.codecrafters.io/users/codecrafters-bot?r=2qF)
+# 🏗️ Build Your Own Shell Challenge
 
-This is a starting point for C# solutions to the
-["Build Your Own Shell" Challenge](https://app.codecrafters.io/courses/shell/overview).
+This is a repository for C# solutions to the ["Build Your Own Shell" challenge](https://app.codecrafters.io/courses/shell/overview).
 
-In this challenge, you'll build your own POSIX compliant shell that's capable of
-interpreting shell commands, running external programs and builtin commands like
-cd, pwd, echo and more. Along the way, you'll learn about shell command parsing,
-REPLs, builtin commands, and more.
+## 📋 Introduction
 
-**Note**: If you're viewing this repo on GitHub, head over to
-[codecrafters.io](https://codecrafters.io) to try the challenge.
+Welcome to the Build your own Shell challenge!
 
-# Passing the first stage
+A shell is a command-line interface that executes commands and manages processes. In this challenge, you'll build your own POSIX compliant shell that's capable of interpreting shell commands, running external programs and builtin commands like cd, pwd, echo and more.
 
-The entry point for your `shell` implementation is in `src/main.cs`. Study and
-uncomment the relevant code, and push your changes to pass the first stage:
+Along the way, you'll learn about shell command parsing, REPLs, builtin commands, and more.
 
-```sh
-git commit -am "pass 1st stage" # any msg
-git push origin master
-```
-
-Time to move on to the next stage!
-
-# Stage 2 & beyond
-
-Note: This section is for stages 2 and beyond.
+## 🛠️ Run
 
 1. Ensure you have `dotnet (9.0)` installed locally
-1. Run `./your_program.sh` to run your program, which is implemented in
-   `src/main.cs`.
-1. Commit your changes and run `git push origin master` to submit your solution
-   to CodeCrafters. Test output will be streamed to your terminal.
+2. Run `./your_program.sh` to run your program

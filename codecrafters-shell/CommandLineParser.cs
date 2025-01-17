@@ -1,4 +1,4 @@
-internal class CommandLineParser
+internal class CommandLineInput
 {
     private const char UserInputEnd = '\0';
 
@@ -6,15 +6,22 @@ internal class CommandLineParser
     public bool StdOutAppend { get; private set; }
     public string? StdErr { get; private set; }
     public bool StdErrAppend { get; internal set; }
+    public string Command
+    {
+        get { return tokens.FirstOrDefault(string.Empty); }
+    }
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
+    public IEnumerable<string> Args
+    {
+        get { return tokens; }
+    }
+
     private Action<char> parserMode;
     private IList<char> currentToken;
     private IList<string> tokens;
     private int index;
-#pragma warning restore CS8618
 
-    public IEnumerable<string> Parse(string commandLine)
+    private CommandLineInput()
     {
         StdErr = null;
         StdOut = null;
@@ -24,15 +31,18 @@ internal class CommandLineParser
         tokens = [];
         parserMode = StartParsing;
         index = 0;
+    }
 
-        while(index < commandLine.Length)
+    public static CommandLineInput Parse(string commandLine)
+    {
+        var result = new CommandLineInput();
+        while(result.index < commandLine.Length)
         {
-            parserMode(commandLine[index]);
+            result.parserMode(commandLine[result.index]);
         }
 
-        parserMode(UserInputEnd);
-
-        return tokens;
+        result.parserMode(UserInputEnd);
+        return result;
     }
 
     private void StartParsing(char character)

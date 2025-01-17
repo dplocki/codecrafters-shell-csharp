@@ -1,6 +1,5 @@
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("codecrafters-shell-tests")]
 
-var parser = new CommandLineParser();
 var executableDirectories = new ExecutableDirectories(Environment.GetEnvironmentVariable("PATH") ?? "");
 var builtinCommandsMap = new Dictionary<string, ICommand>();
 var runExecutable = new RunExecutableCommand();
@@ -23,31 +22,30 @@ while (true)
     Console.Write("$ ");
 
     var userInput = Console.ReadLine() ?? string.Empty;
-    var parameters = parser.Parse(userInput).ToArray();
+    var parsedUserInput = CommandLineInput.Parse(userInput);
 
-    var stdOut = parser.StdOut == null
+    var stdOut = parsedUserInput.StdOut == null
         ? Console.Out
-        : new StreamWriter(parser.StdOut, parser.StdOutAppend);
+        : new StreamWriter(parsedUserInput.StdOut, parsedUserInput.StdOutAppend);
 
-    var stdErr = parser.StdErr == null
+    var stdErr = parsedUserInput.StdErr == null
         ? Console.Error
-        : new StreamWriter(parser.StdErr, parser.StdErrAppend);
+        : new StreamWriter(parsedUserInput.StdErr, parsedUserInput.StdErrAppend);
 
-    var command = parameters.FirstOrDefault("");
-    if (builtinCommandsMap.TryGetValue(command, out var builtinCommand))
+    if (builtinCommandsMap.TryGetValue(parsedUserInput.Command, out var builtinCommand))
     {
-        await builtinCommand.Execute(stdOut, stdErr, parameters);
+        await builtinCommand.Execute(stdOut, stdErr, parsedUserInput.Args);
     }
     else
     {
-        var executablePath = executableDirectories.GetProgramPath(command);
+        var executablePath = executableDirectories.GetProgramPath(parsedUserInput.Command);
         if (executablePath != null)
         {
-            await runExecutable.Execute(stdOut, stdErr, parameters);
+            await runExecutable.Execute(stdOut, stdErr, parsedUserInput.Args);
         }
         else
         {
-            stdErr.WriteLine($"{command}: command not found");
+            stdErr.WriteLine($"{parsedUserInput.Command}: command not found");
         }
     }
 

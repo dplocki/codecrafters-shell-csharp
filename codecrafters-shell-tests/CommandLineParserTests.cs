@@ -16,15 +16,13 @@
     [InlineData("\"123456789\"", new string[] { "123456789" })]
     public void ShouldSplitInputToTokens(string rawInput, string[] expectedTokens)
     {
-        // Arrange
-        var parser = new CommandLineParser();
-
-        // Act
-        var result = parser.Parse(rawInput);
+        // Act & Arrange
+        var result = CommandLineInput.Parse(rawInput);
 
         // Assert
-        Assert.False(parser.StdOutAppend);
-        Assert.Equal(expectedTokens, result);
+        Assert.Null(result.StdOut);
+        Assert.False(result.StdOutAppend);
+        Assert.Equal(expectedTokens, result.Args);
     }
 
     [Theory]
@@ -36,16 +34,13 @@
     [InlineData("abc1>bcd cde", new string[] { "abc1", "cde" }, "bcd")]
     public void ShouldRecognizeStdOutStreamRedirect(string rawInput, string[] expectedTokens, string expectedStdStream)
     {
-        // Arrange
-        var parser = new CommandLineParser();
-
-        // Act
-        var result = parser.Parse(rawInput);
+        // Act & Arrange
+        var result = CommandLineInput.Parse(rawInput);
 
         // Assert
-        Assert.False(parser.StdOutAppend);
-        Assert.Equal(expectedTokens, result);
-        Assert.Equal(expectedStdStream, parser.StdOut);
+        Assert.False(result.StdOutAppend);
+        Assert.Equal(expectedTokens, result.Args);
+        Assert.Equal(expectedStdStream, result.StdOut);
     }
 
     [Theory]
@@ -57,16 +52,13 @@
 
     public void ShouldRecognizeStdErrStreamRedirect(string rawInput, string[] expectedTokens, string expectedStdStream)
     {
-        // Arrange
-        var parser = new CommandLineParser();
-
-        // Act
-        var result = parser.Parse(rawInput);
+        // Act & Arrange
+        var result = CommandLineInput.Parse(rawInput);
 
         // Assert
-        Assert.False(parser.StdOutAppend);
-        Assert.Equal(expectedTokens, result);
-        Assert.Equal(expectedStdStream, parser.StdErr);
+        Assert.False(result.StdOutAppend);
+        Assert.Equal(expectedTokens, result.Args);
+        Assert.Equal(expectedStdStream, result.StdErr);
     }
 
     [Theory]
@@ -78,16 +70,13 @@
     [InlineData("abc1>>bcd cde", new string[] { "abc1", "cde" }, "bcd")]
     public void ShouldRecognizeStdOutStreamAppendRedirect(string rawInput, string[] expectedTokens, string expectedStdStream)
     {
-        // Arrange
-        var parser = new CommandLineParser();
-
-        // Act
-        var result = parser.Parse(rawInput);
+        // Act & Arrange
+        var result = CommandLineInput.Parse(rawInput);
 
         // Assert
-        Assert.True(parser.StdOutAppend);
-        Assert.Equal(expectedTokens, result);
-        Assert.Equal(expectedStdStream, parser.StdOut);
+        Assert.True(result.StdOutAppend);
+        Assert.Equal(expectedTokens, result.Args);
+        Assert.Equal(expectedStdStream, result.StdOut);
     }
 
     [Theory]
@@ -98,15 +87,12 @@
     [InlineData("abc 2>>bcd", new string[] { "abc" }, "bcd")]
     public void ShouldRecognizeStdErrStreamAppendRedirect(string rawInput, string[] expectedTokens, string expectedStdStream)
     {
-        // Arrange
-        var parser = new CommandLineParser();
-
-        // Act
-        var result = parser.Parse(rawInput);
+        // Act & Arrange
+        var result = CommandLineInput.Parse(rawInput);
 
         // Assert
-        Assert.True(parser.StdErrAppend);
-        Assert.Equal(expectedTokens, result);
-        Assert.Equal(expectedStdStream, parser.StdErr);
+        Assert.True(result.StdErrAppend);
+        Assert.Equal(expectedTokens, result.Args);
+        Assert.Equal(expectedStdStream, result.StdErr);
     }
 }

@@ -2,13 +2,13 @@ internal class ExitCommand : ICommand
 {
     public string Name => "exit";
 
-    public Task<int> Execute(TextWriter stdOut, TextWriter stdErr, string[] args)
+    public Task<int> Execute(TextWriter stdOut, TextWriter stdErr, IEnumerable<string> args)
     {
         int exitCode = 0;
 
-        if (args.Length > 1)
+        if (args.Count() > 1)
         {
-            if (!int.TryParse(args[1], out exitCode))
+            if (!int.TryParse(args.ElementAt(1), out exitCode))
             {
                 exitCode = 0;
             }

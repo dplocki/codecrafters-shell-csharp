@@ -4,9 +4,9 @@ internal class RunExecutableCommand : ICommand
 {
     public string Name => "RunExecutable";
 
-    async public Task<int> Execute(TextWriter stdOut, TextWriter stdErr, string[] args)
+    async public Task<int> Execute(TextWriter stdOut, TextWriter stdErr, IEnumerable<string> args)
     {
-        var command = args[0];
+        var command = args.ElementAt(0);
         var processInfo = new ProcessStartInfo(command, args.Skip(1))
         {
             RedirectStandardOutput = true,

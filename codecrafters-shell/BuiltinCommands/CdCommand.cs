@@ -2,10 +2,9 @@ internal class CdCommand : ICommand
 {
     public string Name => "cd";
 
-    public Task<int> Execute(TextWriter stdOut, TextWriter stdErr, string[] args)
+    public Task<int> Execute(TextWriter stdOut, TextWriter stdErr, IEnumerable<string> args)
     {
-        var path = args[1];
-
+        var path = args.ElementAt(1);
         if (path == "~")
         {
             Directory.SetCurrentDirectory(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile));

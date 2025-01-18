@@ -19,9 +19,7 @@ foreach (var item in builtinCommands)
 
 while (true)
 {
-    Console.Write("$ ");
-
-    var userInput = Console.ReadLine() ?? string.Empty;
+    var userInput = UserInput.Read();
     var parsedUserInput = CommandLineInput.Parse(userInput);
 
     var stdOut = parsedUserInput.StdOut == null

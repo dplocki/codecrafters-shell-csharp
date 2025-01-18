@@ -28,6 +28,10 @@ class SimpleUserInput(IEnumerable<string> buildInCommands)
                     input.Append(autoCompleat);
                     Console.Write(autoCompleat);
                 }
+                else
+                {
+                    Console.Write('\a');
+                }
             }
             else
             {

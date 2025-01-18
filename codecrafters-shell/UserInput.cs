@@ -67,7 +67,7 @@ class UserInput
                 var suggestion = BuildInCommands.FirstOrDefault(p => p.StartsWith(input.ToString()));
                 if (suggestion != null)
                 {
-                    input.Append(suggestion[input.Length..]);
+                    input.Append(suggestion[input.Length..]).Append(' ');
                     cursorPosition = input.Length;
 
                     RedrawInput(input.ToString(), cursorPosition);

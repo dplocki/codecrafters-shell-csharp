@@ -16,6 +16,7 @@ class SimpleUserInput(IEnumerable<string> buildInCommands)
             var keyInfo = Console.ReadKey(intercept: true);
             if (keyInfo.Key == ConsoleKey.Enter)
             {
+                Console.WriteLine();
                 break;
             }
             else if (keyInfo.Key == ConsoleKey.Tab)

@@ -11,16 +11,17 @@ var builtinCommands = new List<ICommand>()
     new PwdCommand(),
     new CdCommand(),
 };
-
 foreach (var item in builtinCommands)
 {
     builtinCommandsMap[item.Name] = item;
 }
 
+var userInput = new UserInput(builtinCommandsMap.Keys.Select((k, _) => k));
+
+
 while (true)
 {
-    var userInput = UserInput.Read();
-    var parsedUserInput = CommandLineInput.Parse(userInput);
+    var parsedUserInput = CommandLineInput.Parse(userInput.Read());
 
     var stdOut = parsedUserInput.StdOut == null
         ? Console.Out

@@ -1,10 +1,18 @@
+using System.Runtime.CompilerServices;
 using System.Text;
 
 class UserInput
 {
     private const string Prompt = "$ ";
 
-    public static string Read()
+    public IEnumerable<string> BuildInCommands { get; }
+
+    public UserInput(IEnumerable<string> buildInCommands)
+    {
+        BuildInCommands = buildInCommands;
+    }
+
+    public string Read()
     {
         var input = new StringBuilder();
         int cursorPosition = 0;
@@ -56,11 +64,14 @@ class UserInput
             }
             else if (keyInfo.Key == ConsoleKey.Tab)
             {
-                string suggestion = "AutoCompleteText";
-                input.Append(suggestion);
-                cursorPosition = input.Length;
+                var suggestion = BuildInCommands.FirstOrDefault(p => p.StartsWith(input.ToString()));
+                if (suggestion != null)
+                {
+                    input.Append(suggestion[input.Length..]);
+                    cursorPosition = input.Length;
 
-                RedrawInput(input.ToString(), cursorPosition);
+                    RedrawInput(input.ToString(), cursorPosition);
+                }
             }
             else
             {

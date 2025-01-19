@@ -1,6 +1,6 @@
 using System.Text;
 
-class SimpleUserInput(IEnumerable<string> buildInCommands)
+class SimpleUserInput(IEnumerable<string> buildInCommands, ExecutableDirectories executableDirectories)
 {
     private const string Prompt = "$ ";
 
@@ -21,17 +21,27 @@ class SimpleUserInput(IEnumerable<string> buildInCommands)
             }
             else if (keyInfo.Key == ConsoleKey.Tab)
             {
-                var suggestion = BuildInCommands.FirstOrDefault(s => s.StartsWith(input.ToString()));
+                var currentInput = input.ToString();
+                var suggestion = BuildInCommands.FirstOrDefault(s => s.StartsWith(currentInput));
                 if (suggestion != null)
                 {
                     var autoCompleat = suggestion[input.Length..] + ' ';
                     input.Append(autoCompleat);
                     Console.Write(autoCompleat);
+                    continue;
                 }
-                else
+
+                suggestion = executableDirectories.GetProgramsBeginWith(currentInput).FirstOrDefault();
+                if (suggestion != null)
                 {
-                    Console.Write('\a');
+                    var autoCompleat = suggestion[input.Length..] + ' ';
+                    input.Append(autoCompleat);
+                    Console.Write(autoCompleat);
+                    continue;
                 }
+
+                Console.Write('\a');
+                continue;
             }
             else
             {

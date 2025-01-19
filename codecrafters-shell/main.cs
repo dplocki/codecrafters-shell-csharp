@@ -16,7 +16,7 @@ foreach (var item in builtinCommands)
     builtinCommandsMap[item.Name] = item;
 }
 
-var userInput = new SimpleUserInput(builtinCommandsMap.Keys.Select((k, _) => k));
+var userInput = new SimpleUserInput(builtinCommandsMap.Keys.Select((k, _) => k), executableDirectories);
 
 
 while (true)

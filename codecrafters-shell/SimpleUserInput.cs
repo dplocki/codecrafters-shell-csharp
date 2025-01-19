@@ -50,10 +50,12 @@ class SimpleUserInput(IEnumerable<string> buildInCommands, ExecutableDirectories
                         {
                             input.Append(suggestion);
                             Console.Write(suggestion);
+                            suggestions = null;
                             continue;
                         }
                     }
                 }
+
                 if (suggestion == null)
                 {
                     Console.Write('\a');
@@ -63,6 +65,7 @@ class SimpleUserInput(IEnumerable<string> buildInCommands, ExecutableDirectories
                 var autoCompleat = suggestion[input.Length..] + ' ';
                 input.Append(autoCompleat);
                 Console.Write(autoCompleat);
+                suggestions = null;
                 continue;
             }
             else

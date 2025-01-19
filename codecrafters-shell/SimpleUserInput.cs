@@ -46,9 +46,12 @@ class SimpleUserInput(IEnumerable<string> buildInCommands, ExecutableDirectories
                     else
                     {
                         suggestion = GetCommonPartInSuggestions(currentInput, suggestions);
-                        input.Append(suggestion);
-                        Console.Write(suggestion);
-                        continue;
+                        if (suggestion != string.Empty)
+                        {
+                            input.Append(suggestion);
+                            Console.Write(suggestion);
+                            continue;
+                        }
                     }
                 }
                 if (suggestion == null)

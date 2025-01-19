@@ -38,25 +38,29 @@ class SimpleUserInput(IEnumerable<string> buildInCommands, ExecutableDirectories
                 var suggestion = buildInCommands.FirstOrDefault(s => s != null && s.StartsWith(currentInput));
                 if (suggestion == null)
                 {
-                    suggestions = [.. executableDirectories.GetProgramsBeginWith(currentInput)];
+                    suggestions = [.. executableDirectories
+                            .GetProgramsBeginWith(currentInput)
+                            .Distinct()
+                            .Order()
+                        ];
+
                     if (suggestions.Count() == 1)
                     {
                         suggestion = suggestions.First();
                     }
-                    else
+                    else if (suggestions.Count() > 1)
                     {
                         suggestion = GetCommonPartInSuggestions(currentInput, suggestions);
                         if (suggestion != string.Empty)
                         {
                             input.Append(suggestion);
                             Console.Write(suggestion);
-                            suggestions = null;
                             continue;
                         }
                     }
                 }
 
-                if (suggestion == null)
+                if (string.IsNullOrEmpty(suggestion))
                 {
                     Console.Write('\a');
                     continue;
@@ -65,7 +69,6 @@ class SimpleUserInput(IEnumerable<string> buildInCommands, ExecutableDirectories
                 var autoCompleat = suggestion[input.Length..] + ' ';
                 input.Append(autoCompleat);
                 Console.Write(autoCompleat);
-                suggestions = null;
                 continue;
             }
             else

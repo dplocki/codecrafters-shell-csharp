@@ -13,4 +13,4 @@ Along the way, you'll learn about shell command parsing, REPLs, builtin commands
 ## 🛠️ Run
 
 1. Ensure you have `dotnet (9.0)` installed locally
-2. Run `./your_program.sh` to run your program
+2. Run `./your_program.sh` to run the program

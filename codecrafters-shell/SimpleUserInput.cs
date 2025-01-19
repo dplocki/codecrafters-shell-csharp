@@ -9,11 +9,14 @@ class SimpleUserInput(IEnumerable<string> buildInCommands, ExecutableDirectories
     public string Read()
     {
         var input = new StringBuilder();
+        var keyInfo = new ConsoleKeyInfo(' ', ConsoleKey.None, false, false, false);
+
         Console.Write(Prompt);
 
         while (true)
         {
-            var keyInfo = Console.ReadKey(intercept: true);
+            keyInfo = Console.ReadKey(intercept: true);
+
             if (keyInfo.Key == ConsoleKey.Enter)
             {
                 Console.WriteLine();
@@ -22,25 +25,20 @@ class SimpleUserInput(IEnumerable<string> buildInCommands, ExecutableDirectories
             else if (keyInfo.Key == ConsoleKey.Tab)
             {
                 var currentInput = input.ToString();
-                var suggestion = BuildInCommands.FirstOrDefault(s => s.StartsWith(currentInput));
-                if (suggestion != null)
+                var suggestion = BuildInCommands.FirstOrDefault(s => s != null && s.StartsWith(currentInput));
+                if (suggestion == null)
                 {
-                    var autoCompleat = suggestion[input.Length..] + ' ';
-                    input.Append(autoCompleat);
-                    Console.Write(autoCompleat);
+                    suggestion = executableDirectories.GetProgramsBeginWith(currentInput).FirstOrDefault();
+                }
+                if (suggestion == null)
+                {
+                    Console.Write('\a');
                     continue;
                 }
 
-                suggestion = executableDirectories.GetProgramsBeginWith(currentInput).FirstOrDefault();
-                if (suggestion != null)
-                {
-                    var autoCompleat = suggestion[input.Length..] + ' ';
-                    input.Append(autoCompleat);
-                    Console.Write(autoCompleat);
-                    continue;
-                }
-
-                Console.Write('\a');
+                var autoCompleat = suggestion[input.Length..] + ' ';
+                input.Append(autoCompleat);
+                Console.Write(autoCompleat);
                 continue;
             }
             else

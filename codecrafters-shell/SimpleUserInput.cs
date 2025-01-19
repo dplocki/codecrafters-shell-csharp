@@ -4,12 +4,11 @@ class SimpleUserInput(IEnumerable<string> buildInCommands, ExecutableDirectories
 {
     private const string Prompt = "$ ";
 
-    public IEnumerable<string> BuildInCommands { get; } = buildInCommands;
-
     public string Read()
     {
         var input = new StringBuilder();
         var keyInfo = new ConsoleKeyInfo(' ', ConsoleKey.None, false, false, false);
+        IEnumerable<string>? suggestions = null;
 
         Console.Write(Prompt);
 
@@ -19,16 +18,31 @@ class SimpleUserInput(IEnumerable<string> buildInCommands, ExecutableDirectories
 
             if (keyInfo.Key == ConsoleKey.Enter)
             {
+                suggestions = null;
                 Console.WriteLine();
                 break;
             }
             else if (keyInfo.Key == ConsoleKey.Tab)
             {
+                if (suggestions != null)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine(string.Join("  ", suggestions));
+                    Console.Write(Prompt);
+                    Console.Write(input.ToString());
+                    suggestions = null;
+                    continue;
+                }
+
                 var currentInput = input.ToString();
-                var suggestion = BuildInCommands.FirstOrDefault(s => s != null && s.StartsWith(currentInput));
+                var suggestion = buildInCommands.FirstOrDefault(s => s != null && s.StartsWith(currentInput));
                 if (suggestion == null)
                 {
-                    suggestion = executableDirectories.GetProgramsBeginWith(currentInput).FirstOrDefault();
+                    suggestions = [.. executableDirectories.GetProgramsBeginWith(currentInput)];
+                    if (suggestions.Count() == 1)
+                    {
+                        suggestion = suggestions.First();
+                    }
                 }
                 if (suggestion == null)
                 {
@@ -43,6 +57,7 @@ class SimpleUserInput(IEnumerable<string> buildInCommands, ExecutableDirectories
             }
             else
             {
+                suggestions = null;
                 input.Append(keyInfo.KeyChar);
                 Console.Write(keyInfo.KeyChar);
             }
